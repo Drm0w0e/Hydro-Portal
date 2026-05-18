@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Hydro Portal — Where Human Intelligence Meets Infinite AI</title>
+<meta name="description" content="Hydro Portal is a futuristic AI orchestration platform that connects multiple AI models into one intelligent system." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ----------  RESET / TOKENS  ---------- */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg-0:#04060d;
+    --bg-1:#070a17;
+    --bg-2:#0b1024;
+    --line:rgba(120,160,255,.12);
+    --line-strong:rgba(140,180,255,.28);
+    --text:#e7ecff;
+    --text-dim:#8a93b8;
+    --text-mid:#b6bedc;
+    --cyan:#33e1ff;
+    --blue:#3a7dff;
+    --violet:#7a4dff;
+    --magenta:#c84bff;
+    --pink:#ff4dd0;
+    --neon-grad:linear-gradient(135deg,#33e1ff 0%,#3a7dff 35%,#7a4dff 70%,#c84bff 100%);
+    --neon-soft:linear-gradient(135deg,rgba(51,225,255,.18),rgba(122,77,255,.18) 60%,rgba(200,75,255,.18));
+    --glass:rgba(255,255,255,.04);
+    --glass-strong:rgba(255,255,255,.07);
+    --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:28px;
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  html,body{background:var(--bg-0);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+  body{min-height:100vh;line-height:1.55;font-size:16px}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  ::selection{background:rgba(122,77,255,.45);color:#fff}
+
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;letter-spacing:-.02em;line-height:1.05}
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+
+  /* ----------  GLOBAL BG  ---------- */
+  .bg-stack{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+    radial-gradient(1200px 700px at 18% -10%, rgba(58,125,255,.18), transparent 60%),
+    radial-gradient(1000px 700px at 90% 10%, rgba(200,75,255,.14), transparent 65%),
+    radial-gradient(900px 600px at 50% 110%, rgba(51,225,255,.10), transparent 60%),
+    linear-gradient(180deg,#03050c 0%,#05081a 60%,#04060f 100%);
+  }
+  .grid-floor{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;mix-blend-mode:screen;
+    background-image:
+      linear-gradient(rgba(120,160,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120,160,255,.07) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse at 50% 30%, #000 30%, transparent 75%);
+  }
+  #stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  #neural{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55}
+  .scan{position:fixed;inset:0;z-index:-1;pointer-events:none;mix-blend-mode:overlay;opacity:.07;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.5) 0 1px, transparent 1px 3px);}
+
+  /* ----------  NAV  ---------- */
+  .nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:50;width:min(1200px,calc(100% - 32px));
+    display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
+    background:linear-gradient(180deg,rgba(10,14,30,.65),rgba(10,14,30,.35));
+    border:1px solid var(--line);border-radius:999px;backdrop-filter:blur(20px) saturate(140%);
+    box-shadow:0 10px 40px -10px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding-left:8px}
+  .brand-mark{width:30px;height:30px;border-radius:9px;background:var(--neon-grad);position:relative;box-shadow:0 0 30px rgba(122,77,255,.55)}
+  .brand-mark::after{content:"";position:absolute;inset:5px;border-radius:6px;background:#04060d;
+    background-image:radial-gradient(circle at 30% 30%, rgba(51,225,255,.9), transparent 60%),radial-gradient(circle at 70% 70%, rgba(200,75,255,.9), transparent 60%);
+    background-size:cover}
+  .brand-name{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.01em;font-size:17px}
+  .nav-links{display:flex;gap:6px;align-items:center}
+  .nav-links a{padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--text-mid);transition:all .25s var(--ease)}
+  .nav-links a:hover{color:#fff;background:rgba(255,255,255,.04)}
+  .nav-cta{display:flex;gap:8px;align-items:center}
+  .btn{position:relative;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:500;transition:transform .2s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);white-space:nowrap}
+  .btn-ghost{color:var(--text-mid);border:1px solid var(--line)}
+  .btn-ghost:hover{color:#fff;border-color:var(--line-strong);background:rgba(255,255,255,.03)}
+  .btn-primary{color:#04060d;background:var(--neon-grad);font-weight:600;box-shadow:0 8px 30px -8px rgba(122,77,255,.7),0 0 0 1px rgba(255,255,255,.18) inset}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 40px -8px rgba(122,77,255,.85),0 0 0 1px rgba(255,255,255,.2) inset}
+  .btn-lg{padding:14px 22px;font-size:15px}
+  .mobile-only{display:none}
+
+  /* ----------  HERO  ---------- */
+  main{padding-top:120px}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+  .hero{position:relative;padding:40px 0 80px;text-align:center}
+  .pill{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mid);
+    border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(8px)}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:#33e1ff;box-shadow:0 0 12px #33e1ff;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  .hero h1{font-size:clamp(40px,7vw,86px);font-weight:700;margin:24px auto 18px;max-width:1000px}
+  .hero h1 .grad{background:linear-gradient(120deg,#fff 0%,#bfd0ff 35%,#33e1ff 55%,#c84bff 90%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+  .hero p.lead{font-size:clamp(16px,1.6vw,19px);color:var(--text-mid);max-width:680px;margin:0 auto 36px}
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-outline{color:#fff;border:1px solid var(--line-strong);background:rgba(255,255,255,.02)}
+  .btn-outline:hover{background:rgba(255,255,255,.06)}
+
+  /* ----- Orbit / agent ring ----- */
+  .orbit-wrap{position:relative;margin:64px auto 0;width:min(720px,92vw);aspect-ratio:1/1;max-height:720px}
+  .orbit-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #fff, #7a4dff 35%, #1a0d4a 80%);box-shadow:0 0 60px rgba(122,77,255,.55),0 0 120px rgba(58,125,255,.35), inset 0 0 30px rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+    animation:coreSpin 12s linear infinite}
+  @keyframes coreSpin{to{filter:hue-rotate(360deg)}}
+  .orbit-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(140,180,255,.18)}
+  .ring-1{width:62%;height:62%;animation:spin 30s linear infinite}
+  .ring-2{width:86%;height:86%;animation:spin 50s linear reverse infinite}
+  .ring-3{width:100%;height:100%;animation:spin 80s linear infinite;border-style:solid;border-color:rgba(140,180,255,.08)}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+  .agent-chip{position:absolute;display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:999px;
+    background:rgba(10,14,32,.6);border:1px solid var(--line-strong);backdrop-filter:blur(14px);
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04) inset;
+    font-size:13px;color:#fff;white-space:nowrap;animation:floaty 6s ease-in-out infinite}
+  .agent-chip .ico{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--neon-soft);color:#cdeaff;font-size:12px}
+  .agent-chip .tag{font-size:11px;color:var(--text-dim);margin-left:4px}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  /* Position chips around the orbit */
+  .a1{top:6%;left:12%}
+  .a2{top:0;left:55%}
+  .a3{top:30%;right:0}
+  .a4{bottom:14%;right:8%;animation-delay:-2s}
+  .a5{bottom:0;left:42%;animation-delay:-3s}
+  .a6{top:38%;left:-2%;animation-delay:-4s}
+
+  /* connectors */
+  .conn-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .conn-svg path{stroke:url(#lg);stroke-width:1.2;fill:none;stroke-dasharray:4 6;animation:dash 6s linear infinite;opacity:.7}
+  @keyframes dash{to{stroke-dashoffset:-200}}
+
+  /* ----- Section heading ----- */
+  .eyebrow{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.32em;color:var(--cyan);text-transform:uppercase}
+  .section{padding:120px 0;position:relative}
+  .section h2{font-size:clamp(32px,4.4vw,56px);font-weight:700;margin:14px 0 14px;max-width:760px}
+  .section .sub{color:var(--text-mid);max-width:640px;font-size:17px;margin-bottom:56px}
+  .center{text-align:center;margin-inline:auto}
+  .center .sub{margin-inline:auto}
+
+  /* ----- HOW IT WORKS ----- */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .step{position:relative;padding:24px;border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg, rgba(15,20,42,.7), rgba(10,14,30,.5));backdrop-filter:blur(12px);
+    transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);overflow:hidden}
+  .step::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:var(--neon-grad);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s var(--ease)}
+  .step:hover{transform:translateY(-4px);box-shadow:0 25px 60px -25px rgba(0,0,0,.7)}
+  .step:hover::before{opacity:.7}
+  .step .num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:24px;letter-spacing:.18em}
+  .step h3{font-size:20px;font-weight:600;margin-bottom:8px}
+  .step p{color:var(--text-mid);font-size:14.5px}
+  .step .glow{position:absolute;right:-30px;bottom:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(122,77,255,.35),transparent 70%);filter:blur(20px);opacity:.6}
+
+  /* ----- AGENTS GRID ----- */
+  .agent-net{position:relative}
+  .agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .agent-card{position:relative;padding:26px;border-radius:var(--r-lg);background:linear-gradient(180deg, rgba(14,18,38,.78), rgba(8,10,24,.6));border:1px solid var(--line);overflow:hidden;
+    transition:transform .35s var(--ease), border-color .35s var(--ease)}
+  .agent-card:hover{transform:translateY(-4px);border-color:var(--line-strong)}
+  .agent-card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .agent-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--neon-soft);border:1px solid var(--line-strong);position:relative}
+  .agent-icon svg{width:24px;height:24px;color:#dff1ff}
+  .agent-card h3{font-size:20px;font-weight:600;margin-bottom:6px}
+  .agent-card p{color:var(--text-mid);font-size:14.5px}
+  .model-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;padding:5px 9px;border-radius:6px;border:1px solid var(--line-strong);color:#cfe1ff;background:rgba(15,30,80,.5)}
+  .agent-meter{height:4px;background:rgba(255,255,255,.05);border-radius:10px;margin-top:18px;overflow:hidden}
+  .agent-meter > i{display:block;height:100%;background:var(--neon-grad);box-shadow:0 0 12px rgba(122,77,255,.7);animation:flow 3.5s ease-in-out infinite}
+  @keyframes flow{0%{width:10%}50%{width:95%}100%{width:30%}}
+
+  /* ----- DEMO PREVIEW ----- */
+  .demo{position:relative;border-radius:24px;border:1px solid var(--line-strong);background:linear-gradient(180deg, rgba(10,14,32,.85), rgba(6,8,20,.85));overflow:hidden;
+    box-shadow:0 50px 120px -40px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.02) inset}
+  .demo-bar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .traffic{display:flex;gap:7px}
+  .traffic i{width:11px;height:11px;border-radius:50%;background:#3b3f55}
+  .traffic i:nth-child(1){background:#ff5f57}
+  .traffic i:nth-child(2){background:#febc2e}
+  .traffic i:nth-child(3){background:#28c840}
+  .url{flex:1;text-align:center;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:12px}
+  .demo-body{display:grid;grid-template-columns:240px 1fr 320px;min-height:560px}
+  .demo-side{padding:18px;border-right:1px solid var(--line)}
+  .side-h{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin:14px 0 10px}
+  .side-h:first-child{margin-top:0}
+  .side-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:13.5px;color:var(--text-mid);cursor:default}
+  .side-item:hover{background:rgba(255,255,255,.03);color:#fff}
+  .side-item.active{background:rgba(122,77,255,.12);color:#fff}
+  .side-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+
+  .demo-main{padding:24px;display:flex;flex-direction:column;gap:14px;background:radial-gradient(700px 400px at 30% 0%, rgba(58,125,255,.10), transparent 60%)}
+  .msg{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;max-width:88%;font-size:14.5px}
+  .msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(58,125,255,.18),rgba(122,77,255,.16));border:1px solid rgba(122,77,255,.25);color:#eaf0ff}
+  .msg.ai{align-self:flex-start;background:rgba(255,255,255,.02);border:1px solid var(--line);color:#dde3f5}
+  .msg .ava{width:28px;height:28px;border-radius:8px;background:var(--neon-grad);flex-shrink:0;display:grid;place-items:center;font-size:11px;color:#04060d;font-weight:700}
+
+  .agent-stream{margin-top:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .stream-pill{display:flex;align-items:center;gap:7px;padding:7px 10px;font-size:12px;border-radius:8px;border:1px solid var(--line);background:rgba(8,12,28,.6);color:var(--text-mid)}
+  .stream-pill .ok{color:#5be1a6}
+  .stream-pill .loading{color:var(--cyan);animation:pulse 1.4s infinite}
+
+  .prompt-row{margin-top:auto;display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--line-strong);border-radius:16px;background:rgba(6,8,20,.75)}
+  .prompt-row input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:14.5px;padding:8px 10px}
+  .icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--text-mid)}
+  .icon-btn:hover{color:#fff;border-color:var(--line-strong)}
+  .send-btn{background:var(--neon-grad);color:#04060d;border:0;box-shadow:0 6px 20px -6px rgba(122,77,255,.7)}
+
+  .demo-right{padding:18px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:14px;background:rgba(6,8,18,.4)}
+  .panel{padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(10,14,30,.6)}
+  .panel h4{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+  .activity-line{display:flex;align-items:center;gap:10px;font-size:13px;color:#d6dbf0;padding:6px 0;border-top:1px dashed var(--line)}
+  .activity-line:first-of-type{border-top:0}
+  .activity-line .agent-icon-sm{width:22px;height:22px;border-radius:6px;background:var(--neon-soft);display:grid;place-items:center;font-size:10px;color:#cfe1ff;border:1px solid var(--line-strong)}
+  .latency{margin-left:auto;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px}
+
+  /* ----- FEATURES ----- */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{padding:24px;border-radius:var(--r-lg);background:linear-gradient(180deg, rgba(14,18,38,.7), rgba(8,10,24,.45));border:1px solid var(--line);position:relative;overflow:hidden;transition:transform .35s var(--ease)}
+  .feat:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+  .feat .ic{width:42px;height:42px;border-radius:12px;background:var(--neon-soft);border:1px solid var(--line-strong);display:grid;place-items:center;margin-bottom:16px;color:#cfe1ff}
+  .feat h3{font-size:18px;font-weight:600;margin-bottom:6px}
+  .feat p{color:var(--text-mid);font-size:14px}
+
+  /* ----- MOBILE MOCKUP ----- */
+  .mobile-section{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+  .phone-wrap{position:relative;display:flex;justify-content:center;perspective:1200px}
+  .phone{width:330px;height:670px;border-radius:46px;background:linear-gradient(180deg,#13182e,#06080f);
+    border:1px solid rgba(140,180,255,.25);box-shadow:0 50px 100px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.04) inset, 0 0 60px -10px rgba(122,77,255,.4);
+    padding:14px;position:relative;transform:rotateY(-8deg) rotateX(4deg);transform-style:preserve-3d}
+  .phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:28px;border-radius:14px;background:#000;border:1px solid #1a1f33;z-index:2}
+  .phone-screen{width:100%;height:100%;border-radius:34px;overflow:hidden;background:#04060d;position:relative;display:flex;flex-direction:column}
+  .phone-top{height:44px}
+  .phone-head{padding:18px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+  .phone-head .who{display:flex;align-items:center;gap:10px}
+  .phone-head .who .avatar{width:34px;height:34px;border-radius:10px;background:var(--neon-grad);position:relative;box-shadow:0 0 20px rgba(122,77,255,.6)}
+  .phone-head .who .name{font-weight:600;font-size:14px}
+  .phone-head .who .status{font-size:11px;color:var(--cyan)}
+  .phone-icon-btn{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:grid;place-items:center;color:var(--text-mid)}
+  .phone-chat{flex:1;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .pchip{font-size:12px;padding:8px 12px;border-radius:14px;max-width:80%;line-height:1.4}
+  .pchip.u{align-self:flex-end;background:linear-gradient(135deg,#3a7dff,#7a4dff);color:#fff;border-radius:14px 14px 4px 14px}
+  .pchip.a{align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#dde3f5;border-radius:14px 14px 14px 4px}
+  .pchip .small{display:block;font-size:10px;color:var(--text-dim);margin-top:2px}
+  .pagents{display:flex;gap:6px;flex-wrap:wrap;align-self:flex-start;margin-top:2px}
+  .pagents span{font-size:9.5px;letter-spacing:.06em;padding:4px 7px;border-radius:6px;background:rgba(58,125,255,.16);border:1px solid rgba(122,77,255,.3);color:#cfe1ff}
+  .phone-input{margin:8px 12px 14px;padding:8px 8px 8px 14px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:24px;display:flex;align-items:center;gap:8px}
+  .phone-input input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:13px}
+  .phone-input .mic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--neon-grad);color:#04060d;animation:micPulse 2.4s ease-in-out infinite}
+  @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(122,77,255,.55)}50%{box-shadow:0 0 0 14px rgba(122,77,255,0)}}
+  .phone-nav{display:flex;justify-content:space-around;padding:10px 8px 14px;border-top:1px solid var(--line);background:rgba(6,8,16,.6)}
+  .phone-nav .nv{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--text-dim);padding:4px 8px;border-radius:8px}
+  .phone-nav .nv.active{color:#fff;background:rgba(122,77,255,.16)}
+  .phone-nav .nv svg{width:18px;height:18px}
+
+  .phone-glow{position:absolute;inset:-40px;border-radius:60px;background:radial-gradient(circle at 50% 50%, rgba(122,77,255,.25), transparent 60%);filter:blur(20px);z-index:-1}
+
+  /* ----- TESTIMONIALS ----- */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .quote{padding:24px;border-radius:var(--r-lg);background:linear-gradient(180deg, rgba(15,20,42,.7), rgba(10,14,30,.4));border:1px solid var(--line)}
+  .quote p{font-size:16px;color:#e7ecff;line-height:1.55}
+  .quote .who{margin-top:18px;display:flex;align-items:center;gap:12px}
+  .quote .ava{width:38px;height:38px;border-radius:10px;background:var(--neon-grad)}
+  .quote .meta{font-size:13px}
+  .quote .meta b{display:block;font-weight:600;color:#fff}
+  .quote .meta span{color:var(--text-dim);font-size:12px}
+
+  /* ----- PRICING ----- */
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .plan{padding:28px;border-radius:var(--r-lg);background:linear-gradient(180deg, rgba(15,20,42,.85), rgba(10,14,30,.55));border:1px solid var(--line);display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden}
+  .plan.pop{border:1px solid transparent;background:
+    linear-gradient(180deg, rgba(20,15,55,.95), rgba(10,12,30,.7)) padding-box,
+    linear-gradient(135deg,#33e1ff,#7a4dff,#c84bff) border-box;box-shadow:0 30px 80px -30px rgba(122,77,255,.45)}
+  .plan .ribbon{position:absolute;top:14px;right:14px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#04060d;background:var(--neon-grad);padding:5px 9px;border-radius:6px;font-weight:700}
+  .plan h3{font-size:22px;font-weight:600}
+  .plan .desc{color:var(--text-dim);font-size:13px;margin-top:-12px}
+  .plan .price{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1}
+  .plan .price span{font-size:14px;color:var(--text-dim);font-weight:400;margin-left:6px}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--text-mid);flex:1}
+  .plan li{display:flex;gap:10px;align-items:flex-start}
+  .plan li::before{content:"";width:16px;height:16px;border-radius:50%;background:var(--neon-soft);border:1px solid var(--line-strong);flex-shrink:0;margin-top:2px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2333e1ff' stroke-width='3' stroke-linecap='round'><path d='M20 6L9 17l-5-5'/></svg>");background-repeat:no-repeat;background-position:center;background-size:10px}
+
+  /* ----- CTA / FOOTER ----- */
+  .cta{position:relative;margin:80px 0 40px;padding:60px 40px;border-radius:28px;text-align:center;
+    background:linear-gradient(135deg, rgba(122,77,255,.18), rgba(58,125,255,.14) 60%, rgba(51,225,255,.12));
+    border:1px solid var(--line-strong);overflow:hidden}
+  .cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(122,77,255,.3), transparent 60%);pointer-events:none}
+  .cta h2{font-size:clamp(28px,4vw,46px);font-weight:700;margin-bottom:14px}
+  .cta p{color:var(--text-mid);max-width:520px;margin:0 auto 24px}
+  footer{border-top:1px solid var(--line);padding:36px 0;color:var(--text-dim);font-size:13.5px}
+  .footer-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  .foot-links{display:flex;gap:18px}
+  .foot-links a:hover{color:#fff}
+
+  /* ----- TYPING dot ----- */
+  .typing{display:inline-flex;gap:4px;align-items:center}
+  .typing i{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:blink 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}
+  .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes blink{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+
+  /* ----- REVEAL ----- */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s var(--ease), transform .9s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ----- RESPONSIVE ----- */
+  @media(max-width:980px){
+    .steps{grid-template-columns:repeat(2,1fr)}
+    .agent-grid{grid-template-columns:repeat(2,1fr)}
+    .features{grid-template-columns:repeat(2,1fr)}
+    .quotes{grid-template-columns:1fr}
+    .pricing{grid-template-columns:1fr}
+    .demo-body{grid-template-columns:1fr}
+    .demo-side,.demo-right{display:none}
+    .mobile-section{grid-template-columns:1fr;text-align:center}
+    .phone{transform:none}
+  }
+  @media(max-width:720px){
+    .nav-links{display:none}
+    .mobile-only{display:inline-flex}
+    main{padding-top:100px}
+    .hero h1{font-size:42px}
+    .steps{grid-template-columns:1fr}
+    .agent-grid{grid-template-columns:1fr}
+    .features{grid-template-columns:1fr}
+    .section{padding:80px 0}
+    .cta{padding:40px 22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== BG layers ====== -->
+<div class="bg-stack"></div>
+<div class="grid-floor"></div>
+<canvas id="stars"></canvas>
+<canvas id="neural"></canvas>
+<div class="scan"></div>
+
+<!-- ====== NAV ====== -->
+<nav class="nav">
+  <a href="#" class="brand">
+    <div class="brand-mark"></div>
+    <span class="brand-name">Hydro Portal</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#agents">Agents</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-ghost">Sign in</a>
+    <a href="#" class="btn btn-primary">Launch Portal <span aria-hidden>›</span></a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ====== HERO ====== -->
+<section class="hero container">
+  <span class="pill reveal"><span class="dot"></span> Live multi-agent orchestration · 6 specialized AIs</span>
+  <h1 class="reveal">
+    <span class="grad">Where Human Intelligence</span><br/>
+    Meets Infinite AI
+  </h1>
+  <p class="lead reveal">
+    One prompt. Six specialized agents. Infinite possibility.
+    Hydro Portal decomposes your request, orchestrates a network of frontier
+    models, and merges everything into one perfect answer.
+  </p>
+  <div class="hero-cta reveal">
+    <a href="#demo" class="btn btn-primary btn-lg">Try Live Demo <span>→</span></a>
+    <a href="#how" class="btn btn-outline btn-lg">Watch the demo</a>
+  </div>
+
+  <!-- Orbit / agent ring -->
+  <div class="orbit-wrap reveal" aria-hidden="true">
+    <svg class="conn-svg" viewBox="0 0 600 600" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="lg" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#33e1ff"/>
+          <stop offset="50%" stop-color="#7a4dff"/>
+          <stop offset="100%" stop-color="#c84bff"/>
+        </linearGradient>
+      </defs>
+      <path d="M300,300 C220,180 140,150 100,90"/>
+      <path d="M300,300 C310,180 350,80 360,30"/>
+      <path d="M300,300 C420,260 520,210 580,200"/>
+      <path d="M300,300 C460,360 520,460 540,510"/>
+      <path d="M300,300 C280,420 310,520 320,580"/>
+      <path d="M300,300 C160,330 60,310 10,310"/>
+    </svg>
+
+    <div class="orbit-ring ring-3"></div>
+    <div class="orbit-ring ring-2"></div>
+    <div class="orbit-ring ring-1"></div>
+
+    <div class="orbit-core">Hydro<br/>Core</div>
+
+    <div class="agent-chip a1"><span class="ico">R</span> Research AI <span class="tag">Gemini 2.5</span></div>
+    <div class="agent-chip a2"><span class="ico">C</span> Coding AI <span class="tag">Sonnet 4.5</span></div>
+    <div class="agent-chip a3"><span class="ico">D</span> Design AI <span class="tag">GPT-4o</span></div>
+    <div class="agent-chip a4"><span class="ico">S</span> Strategy AI <span class="tag">Sonnet 4.5</span></div>
+    <div class="agent-chip a5"><span class="ico">∑</span> Summarizer AI <span class="tag">Gemini 2.5</span></div>
+    <div class="agent-chip a6"><span class="ico">A</span> Automation AI <span class="tag">GPT-4o</span></div>
+  </div>
+</section>
+
+<!-- ====== HOW IT WORKS ====== -->
+<section id="how" class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">How it works</span>
+      <h2 class="center reveal">The Orchestration Engine</h2>
+      <p class="sub reveal" style="margin-inline:auto">A neural pipeline that turns one prompt into the combined intelligence of multiple frontier models.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">01 / INPUT</div>
+        <h3>You prompt</h3>
+        <p>Type or speak a single request in plain language. Drop files for context.</p>
+        <div class="glow"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">02 / PLAN</div>
+        <h3>Planner decomposes</h3>
+        <p>A planner AI breaks your task into specialized subtasks across agents.</p>
+        <div class="glow" style="background:radial-gradient(circle,rgba(51,225,255,.32),transparent 70%)"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">03 / EXECUTE</div>
+        <h3>Agents execute</h3>
+        <p>Frontier models run in parallel — each doing what they do best.</p>
+        <div class="glow" style="background:radial-gradient(circle,rgba(200,75,255,.32),transparent 70%)"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">04 / SYNTHESIZE</div>
+        <h3>Synthesizer merges</h3>
+        <p>A final AI merges every output into one beautifully unified answer.</p>
+        <div class="glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== AGENT NETWORK ====== -->
+<section id="agents" class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">The network</span>
+      <h2 class="center reveal">Six Specialized Agents</h2>
+      <p class="sub reveal" style="margin-inline:auto">Each agent uses the best model for its job — routed automatically by the Hydro Core.</p>
+    </div>
+
+    <div class="agent-grid">
+      <!-- Research -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <span class="model-tag">Gemini 2.5</span>
+        </div>
+        <h3>Research AI</h3>
+        <p>Gathers facts, data &amp; insights from across the open web and your knowledge base.</p>
+        <div class="agent-meter"><i></i></div>
+      </div>
+      <!-- Coding -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <span class="model-tag">Sonnet 4.5</span>
+        </div>
+        <h3>Coding AI</h3>
+        <p>Writes, reviews, and refactors production code across any language or framework.</p>
+        <div class="agent-meter"><i style="animation-delay:-.4s"></i></div>
+      </div>
+      <!-- Design -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20 4 4 0 0 0 0-8 2 2 0 0 1 0-4 6 6 0 0 0 0-8z"/></svg></div>
+          <span class="model-tag">GPT-4o</span>
+        </div>
+        <h3>Design AI</h3>
+        <p>UX, visual systems &amp; brand identity. Generates Figma-ready specs and images.</p>
+        <div class="agent-meter"><i style="animation-delay:-.9s"></i></div>
+      </div>
+      <!-- Strategy -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg></div>
+          <span class="model-tag">Sonnet 4.5</span>
+        </div>
+        <h3>Strategy AI</h3>
+        <p>Business planning, market analysis, and roadmap synthesis for decision making.</p>
+        <div class="agent-meter"><i style="animation-delay:-1.3s"></i></div>
+      </div>
+      <!-- Summarizer -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg></div>
+          <span class="model-tag">Gemini 2.5</span>
+        </div>
+        <h3>Summarizer AI</h3>
+        <p>Distills documents, threads, and meetings into crisp briefs you can act on.</p>
+        <div class="agent-meter"><i style="animation-delay:-1.7s"></i></div>
+      </div>
+      <!-- Automation -->
+      <div class="agent-card reveal">
+        <div class="top">
+          <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09c0 .65.39 1.23 1.03 1.51a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9c.28.64.86 1.03 1.51 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1.03z"/></svg></div>
+          <span class="model-tag">GPT-4o</span>
+        </div>
+        <h3>Automation AI</h3>
+        <p>Workflows &amp; integrations — connects your stack and runs multi-step jobs.</p>
+        <div class="agent-meter"><i style="animation-delay:-2.1s"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== DEMO PREVIEW ====== -->
+<section id="demo" class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">Live demo</span>
+      <h2 class="center reveal">See the orchestration in motion</h2>
+      <p class="sub reveal" style="margin-inline:auto">Watch one prompt fan out to six agents, run in parallel, and converge into one unified answer.</p>
+    </div>
+
+    <div class="demo reveal">
+      <div class="demo-bar">
+        <div class="traffic"><i></i><i></i><i></i></div>
+        <div class="url">https://app.hydroportal.ai / workspace</div>
+        <span class="mono" style="font-size:11px;color:var(--text-dim)">v1.0 · public preview</span>
+      </div>
+
+      <div class="demo-body">
+        <!-- SIDEBAR -->
+        <aside class="demo-side">
+          <div class="side-h">Workspace</div>
+          <div class="side-item active"><span class="side-dot"></span> Orchestration</div>
+          <div class="side-item"><span class="side-dot" style="background:#7a4dff"></span> Agents</div>
+          <div class="side-item"><span class="side-dot" style="background:#c84bff"></span> Memory</div>
+          <div class="side-item"><span class="side-dot" style="background:#5be1a6"></span> Integrations</div>
+
+          <div class="side-h">Recent</div>
+          <div class="side-item">Launch plan for a Mars colony…</div>
+          <div class="side-item">Refactor billing service…</div>
+          <div class="side-item">Design system audit…</div>
+          <div class="side-item">Q3 strategy review…</div>
+
+          <div class="side-h">Memory</div>
+          <div class="side-item">Brand voice · pinned</div>
+          <div class="side-item">API keys · synced</div>
+        </aside>
+
+        <!-- MAIN CHAT -->
+        <div class="demo-main">
+          <div class="msg user">
+            <div class="ava">R</div>
+            <div>Build a launch plan for a fintech app: pricing, landing page copy, growth strategy, and the React component for sign-up.</div>
+          </div>
+
+          <div class="msg ai">
+            <div class="ava">H</div>
+            <div>
+              On it. Routing to <b>Strategy</b>, <b>Design</b>, <b>Coding</b> and <b>Research</b> in parallel.
+              <div class="agent-stream">
+                <div class="stream-pill"><span class="ok">●</span> Research AI · done</div>
+                <div class="stream-pill"><span class="ok">●</span> Strategy AI · done</div>
+                <div class="stream-pill"><span class="loading">●</span> Design AI · drafting</div>
+                <div class="stream-pill"><span class="loading">●</span> Coding AI · building</div>
+                <div class="stream-pill"><span class="ok">●</span> Summarizer · queued</div>
+                <div class="stream-pill"><span class="loading">●</span> Automation · standby</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg ai">
+            <div class="ava">H</div>
+            <div>
+              <b>Synthesized answer</b><br/>
+              <span style="color:var(--text-mid);font-size:13.5px">→ Pricing: 3 tiers (Free, Pro $19, Team $49)<br/>→ Headline: "Banking that thinks for you"<br/>→ Growth: launch on Product Hunt + paid LinkedIn pilot<br/>→ React signup component generated · <span class="mono" style="color:var(--cyan)">SignUp.tsx</span></span>
+              <div class="typing" style="margin-top:8px"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+
+          <div class="prompt-row">
+            <button class="icon-btn" title="Attach">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6.21"/><polygon points="16 3 21 8 12 17 7 17 7 12 16 3"/></svg>
+            </button>
+            <button class="icon-btn" title="Voice">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+            </button>
+            <input id="promptInput" placeholder="Ask Hydro Portal anything…" />
+            <button class="icon-btn send-btn" title="Send">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <aside class="demo-right">
+          <div class="panel">
+            <h4>Agent activity</h4>
+            <div class="activity-line"><div class="agent-icon-sm">R</div> Research AI <span class="latency">312ms</span></div>
+            <div class="activity-line"><div class="agent-icon-sm">S</div> Strategy AI <span class="latency">540ms</span></div>
+            <div class="activity-line"><div class="agent-icon-sm">D</div> Design AI <span class="latency">724ms</span></div>
+            <div class="activity-line"><div class="agent-icon-sm">C</div> Coding AI <span class="latency">810ms</span></div>
+            <div class="activity-line"><div class="agent-icon-sm">∑</div> Summarizer AI <span class="latency">96ms</span></div>
+            <div class="activity-line"><div class="agent-icon-sm">A</div> Automation AI <span class="latency">idle</span></div>
+          </div>
+          <div class="panel">
+            <h4>Memory</h4>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.55">
+              <p style="margin-bottom:6px">📌 Brand voice: <i>friendly, confident, never salesy.</i></p>
+              <p style="margin-bottom:6px">📌 Stack: Next.js + Supabase + Tailwind.</p>
+              <p>📌 Audience: India + SEA fintech early adopters.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <h4>Integrations</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="model-tag">Slack</span>
+              <span class="model-tag">Notion</span>
+              <span class="model-tag">GitHub</span>
+              <span class="model-tag">Figma</span>
+              <span class="model-tag">Linear</span>
+              <span class="model-tag">Drive</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FEATURES ====== -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">Capabilities</span>
+      <h2 class="center reveal">Built for the future</h2>
+      <p class="sub reveal" style="margin-inline:auto">Every layer engineered for speed, privacy, and the long arc of agentic intelligence.</p>
+    </div>
+    <div class="features">
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg></div>
+        <h3>AI Memory</h3>
+        <p>Persistent context across sessions. Pin facts, projects, and personas.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/></svg></div>
+        <h3>Voice Input</h3>
+        <p>Speak naturally — Whisper transcription, near-zero latency.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <h3>File Upload</h3>
+        <p>PDF, image, code or CSV — agents read everything for context.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.5 8.5 8.5 0 0 1-7.6-4.7L3 21l1.7-5.1A8.5 8.5 0 1 1 21 11.5z"/></svg></div>
+        <h3>Chat History</h3>
+        <p>Every conversation indexed, searchable, and exportable.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20"/></svg></div>
+        <h3>API Integrations</h3>
+        <p>Slack, GitHub, Notion, Figma, Linear, Drive. Add your own.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Private &amp; Secure</h3>
+        <p>End-to-end encrypted, SOC2-ready. Your data stays yours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MOBILE APP PREVIEW ====== -->
+<section class="section">
+  <div class="container">
+    <div class="mobile-section">
+      <div class="reveal">
+        <span class="eyebrow">Mobile app</span>
+        <h2 style="margin-top:14px">Carry your agent swarm in your pocket.</h2>
+        <p class="sub" style="margin-top:14px">A native iOS &amp; Android experience built for one-handed orchestration — voice, chat, and live agent activity in a single fluid interface.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
+          <a href="#" class="btn btn-outline btn-lg"> App Store</a>
+          <a href="#" class="btn btn-outline btn-lg">▶ Google Play</a>
+        </div>
+      </div>
+
+      <div class="phone-wrap reveal">
+        <div class="phone-glow"></div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-top"></div>
+            <div class="phone-head">
+              <div class="who">
+                <div class="avatar"></div>
+                <div>
+                  <div class="name">Hydro Portal</div>
+                  <div class="status">● Orchestrating · 6 agents</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="phone-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+                <button class="phone-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+              </div>
+            </div>
+            <div class="phone-chat">
+              <div class="pchip u">Plan a 3-day Tokyo trip with food, anime spots and a dawn walk. <span class="small">9:41 AM</span></div>
+              <div class="pchip a">Routing to Research + Strategy AI…</div>
+              <div class="pagents"><span>Research</span><span>Strategy</span><span>Summarizer</span></div>
+              <div class="pchip a">
+                <b>Day 1 · Shibuya immersion</b><br/>
+                7am Yoyogi Park · 11am Nakano Broadway · 8pm omakase at Sushi Sho.
+                <span class="small">via Strategy + Research AI</span>
+              </div>
+              <div class="pchip a"><span class="typing"><i></i><i></i><i></i></span></div>
+            </div>
+            <div class="phone-input">
+              <input placeholder="Ask anything…" />
+              <button class="mic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
+            </div>
+            <div class="phone-nav">
+              <div class="nv active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.5 8.5 0 0 1-7.6-4.7L3 21l1.7-5.1A8.5 8.5 0 1 1 21 11.5z"/></svg>
+                Chat
+              </div>
+              <div class="nv">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg>
+                Agents
+              </div>
+              <div class="nv">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/></svg>
+                Voice
+              </div>
+              <div class="nv">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                Me
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== TESTIMONIALS ====== -->
+<section class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">Testimonials</span>
+      <h2 class="center reveal">Loved by builders</h2>
+    </div>
+    <div class="quotes" style="margin-top:24px">
+      <div class="quote reveal">
+        <p>"Hydro Portal collapses what used to take my team a week into a single conversation."</p>
+        <div class="who"><div class="ava"></div><div class="meta"><b>Mira Chen</b><span>CTO, Neuralis</span></div></div>
+      </div>
+      <div class="quote reveal">
+        <p>"The multi-agent orchestration feels like having a senior engineer, designer, and strategist on call 24/7."</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#33e1ff,#3a7dff)"></div><div class="meta"><b>Daniel Kohl</b><span>Founder, Vexa</span></div></div>
+      </div>
+      <div class="quote reveal">
+        <p>"First time I've felt the AI actually understood the full context of my request — not just the keywords."</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#c84bff,#ff4dd0)"></div><div class="meta"><b>Aisha Verma</b><span>Head of AI, Lumin Labs</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== PRICING ====== -->
+<section id="pricing" class="section">
+  <div class="container">
+    <div class="center" style="text-align:center">
+      <span class="eyebrow reveal">Pricing</span>
+      <h2 class="center reveal">Simple. Powerful.</h2>
+      <p class="sub reveal" style="margin-inline:auto">Start free. Upgrade when the agents start replacing whole teams.</p>
+    </div>
+    <div class="pricing">
+      <div class="plan reveal">
+        <h3>Explorer</h3>
+        <p class="desc">For tinkerers</p>
+        <div class="price">$0<span>/mo</span></div>
+        <ul>
+          <li>50 prompts / month</li>
+          <li>3 active agents</li>
+          <li>Basic memory</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#" class="btn btn-outline btn-lg" style="justify-content:center">Get started</a>
+      </div>
+      <div class="plan pop reveal">
+        <span class="ribbon">Most popular</span>
+        <h3>Pro</h3>
+        <p class="desc">For builders</p>
+        <div class="price">$29<span>/mo</span></div>
+        <ul>
+          <li>Unlimited prompts</li>
+          <li>All 6 agents</li>
+          <li>Long-term memory</li>
+          <li>Voice input &amp; file uploads</li>
+          <li>API integrations</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-lg" style="justify-content:center">Get started</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Enterprise</h3>
+        <p class="desc">For teams</p>
+        <div class="price" style="font-size:36px;padding-top:6px">Custom</div>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>SSO &amp; audit logs</li>
+          <li>Private deployment</li>
+          <li>Custom agents</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="btn btn-outline btn-lg" style="justify-content:center">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA ====== -->
+<section class="container">
+  <div class="cta reveal">
+    <h2>Step into the portal.</h2>
+    <p>Six agents. One mind. The fastest way to turn an idea into a shipped result.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="#" class="btn btn-primary btn-lg">Launch Hydro Portal →</a>
+      <a href="#" class="btn btn-outline btn-lg">Support development</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="container footer-row">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="brand-mark" style="width:24px;height:24px;border-radius:7px"></div>
+      <span>Hydro Portal © 2026 · Where Human Intelligence Meets Infinite AI</span>
+    </div>
+    <div class="foot-links">
+      <a href="#">Docs</a><a href="#">API</a><a href="#">Support</a><a href="#">Donate</a><a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+/* ---------- particle starfield ---------- */
+(function(){
+  const c=document.getElementById('stars'),x=c.getContext('2d');
+  let w,h,stars=[];
+  function size(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';}
+  function init(){stars=[];const n=Math.min(180, Math.floor(innerWidth/8));for(let i=0;i<n;i++)stars.push({x:Math.random()*w,y:Math.random()*h,z:Math.random()*0.9+0.1,s:Math.random()*1.4+0.3});}
+  function tick(){
+    x.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.y+=s.z*0.4; if(s.y>h) s.y=0;
+      const a = 0.35 + s.z*0.6;
+      x.fillStyle=`rgba(${180+Math.floor(s.z*60)}, ${190+Math.floor(s.z*40)}, 255, ${a})`;
+      x.beginPath();x.arc(s.x,s.y,s.s*devicePixelRatio,0,Math.PI*2);x.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  size();init();tick();
+  addEventListener('resize',()=>{size();init();});
+})();
+
+/* ---------- neural network animation ---------- */
+(function(){
+  const c=document.getElementById('neural'),x=c.getContext('2d');
+  let w,h,nodes=[];
+  function size(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';}
+  function init(){
+    nodes=[];const n=Math.min(90, Math.floor(innerWidth/16));
+    for(let i=0;i<n;i++) nodes.push({
+      x:Math.random()*w,y:Math.random()*h,
+      vx:(Math.random()-.5)*0.25*devicePixelRatio,
+      vy:(Math.random()-.5)*0.25*devicePixelRatio,
+    });
+  }
+  function tick(){
+    x.clearRect(0,0,w,h);
+    for(const a of nodes){
+      a.x+=a.vx;a.y+=a.vy;
+      if(a.x<0||a.x>w) a.vx*=-1;
+      if(a.y<0||a.y>h) a.vy*=-1;
+    }
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
+        const max= (160*devicePixelRatio)**2;
+        if(d2<max){
+          const alpha=(1-d2/max)*0.35;
+          const grad=x.createLinearGradient(a.x,a.y,b.x,b.y);
+          grad.addColorStop(0,`rgba(51,225,255,${alpha})`);
+          grad.addColorStop(1,`rgba(200,75,255,${alpha})`);
+          x.strokeStyle=grad;x.lineWidth=0.6*devicePixelRatio;
+          x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();
+        }
+      }
+    }
+    for(const a of nodes){
+      x.fillStyle='rgba(180,210,255,.55)';
+      x.beginPath();x.arc(a.x,a.y,1.6*devicePixelRatio,0,Math.PI*2);x.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  size();init();tick();
+  addEventListener('resize',()=>{size();init();});
+})();
+
+/* ---------- reveal on scroll ---------- */
+(function(){
+  const els=document.querySelectorAll('.reveal');
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:.12});
+  els.forEach(e=>io.observe(e));
+})();
+
+/* ---------- prompt easter egg ---------- */
+(function(){
+  const i=document.getElementById('promptInput');
+  if(!i) return;
+  const examples=[
+    "Plan a 3-day Tokyo trip with food and anime spots…",
+    "Refactor my React billing component and write tests…",
+    "Draft a launch plan for my fintech app and a hero image…",
+    "Summarize my Slack #product channel from this week…"
+  ];
+  let idx=0,pos=0,dir=1,base="";
+  function tick(){
+    const cur=examples[idx];
+    if(dir===1){
+      base=cur.slice(0,++pos);
+      if(pos===cur.length){dir=-1;setTimeout(tick,1500);i.setAttribute('placeholder',base);return;}
+    } else {
+      base=cur.slice(0,--pos);
+      if(pos===0){dir=1;idx=(idx+1)%examples.length;}
+    }
+    i.setAttribute('placeholder',base+'▍');
+    setTimeout(tick, dir===1?42:22);
+  }
+  tick();
+})();
+</script>
+</body>
+</html>

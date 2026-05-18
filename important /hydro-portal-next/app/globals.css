@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body { background: #04060d; color: #e7ecff; }
+  body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(122,77,255,.45); color: #fff; }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl bg-white/[0.04] border border-line;
+  }
+  .glass-strong {
+    @apply backdrop-blur-xl bg-white/[0.07] border border-line-strong;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 px-[18px] py-[10px] rounded-full text-[13.5px] font-medium transition-all duration-200 whitespace-nowrap;
+  }
+  .btn-primary {
+    @apply text-[#04060d] font-semibold bg-neon shadow-[0_8px_30px_-8px_rgba(122,77,255,.7)] hover:-translate-y-px;
+  }
+  .btn-outline {
+    @apply text-white border border-line-strong bg-white/[0.02] hover:bg-white/[0.06];
+  }
+  .btn-ghost {
+    @apply text-text-mid border border-line hover:text-white hover:border-line-strong hover:bg-white/[0.03];
+  }
+  .btn-lg { @apply px-[22px] py-[14px] text-[15px]; }
+
+  .eyebrow {
+    @apply inline-block font-mono text-[11px] tracking-[.32em] uppercase text-neon-cyan;
+  }
+  .section-h2 {
+    @apply font-display font-bold tracking-[-.02em] text-[clamp(32px,4.4vw,56px)] leading-[1.05];
+  }
+  .grad-text {
+    background: linear-gradient(120deg,#fff 0%,#bfd0ff 35%,#33e1ff 55%,#c84bff 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* shared animations */
+@keyframes spinSlow { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes dash { to { stroke-dashoffset: -200; } }
+@keyframes micPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(122,77,255,.55); }
+  50%     { box-shadow: 0 0 0 14px rgba(122,77,255,0); }
+}
+@keyframes typingBlink {
+  0%,80%,100% { opacity: .25; transform: translateY(0); }
+  40%         { opacity: 1;   transform: translateY(-2px); }
+}
